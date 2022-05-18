@@ -56,12 +56,12 @@ const postUrlShorten = async function (req, res) {
         let alreadyExistingUrl = await urlModel.findOne({ longUrl: longUrl })
         if (alreadyExistingUrl) return res.status(400).send({ status: false, msg: `${longUrl} already exists.` })
 
-
+        //logUrl:"https://www.npmjs.com/package/node-url-shortener"
         shortURL.short(longUrl, async function (err, url) {
             if (err) return res.status(400).send({ status: false, msg: 'Error in shortening of url' })
             if (url) {
-                shortUrl = url
-                urlCode = url.slice(url.lastIndexOf('/') + 1)
+                shortUrl = url // url:"https://cdpt.in/lv"
+                urlCode = url.slice(url.lastIndexOf('/') + 1)//15+1
 
                 let creationData = { urlCode, longUrl, shortUrl }
                 let newSortUrl = await urlModel.create(creationData)
@@ -87,7 +87,7 @@ const getUrl = async function (req, res) {
             let newURL = await urlModel.findOne({ urlCode: urlCode }).select({ longUrl: 1, _id: 0 })
             if (!newURL) return res.status(404).send({ status: false, msg: 'longUrl not found' })
             await SET_ASYNC(`${urlCode}`, JSON.stringify(newURL))
-            res.redirect(302, newURL.longUrl)
+            res.redirect(302, newURL)
         }
     }
     catch (error) {
