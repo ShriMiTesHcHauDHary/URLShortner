@@ -80,7 +80,6 @@ const getUrl = async function (req, res) {
     try {
         urlCode = req.params.urlCode
         let url = await GET_ASYNC(`${urlCode}`)
-
         if (url) {
             console.log(url)
             res.redirect(302, url)
