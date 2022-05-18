@@ -81,7 +81,6 @@ const getUrl = async function (req, res) {
         urlCode = req.params.urlCode
         let url = await GET_ASYNC(`${urlCode}`)
         if (url) {
-            console.log(url)
             res.redirect(302, url)
         } else {
             let newURL = await urlModel.findOne({ urlCode: urlCode }).select({ longUrl: 1, _id: 0 })
