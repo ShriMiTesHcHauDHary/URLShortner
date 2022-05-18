@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const  {postUrlShorten}= require ('../controllers/urlController')
+const  {postUrlShorten , getUrl}= require ('../controllers/urlController')
 
 router.post('/url/shorten', postUrlShorten)
 
 
-
+router.get('/:urlCode', getUrl)
 
 
 
