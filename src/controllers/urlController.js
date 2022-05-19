@@ -55,20 +55,33 @@ const postUrlShorten = async function (req, res) {
         if (!validator.isURL(longUrl)) return res.status(400).send({ status: false, msg: `${longUrl} is not a valid url.` })
 
         let alreadyExistingUrl = await urlModel.findOne({ longUrl: longUrl })
-        if (alreadyExistingUrl) return res.status(400).send({ status: false, msg: `shortUrl for ${longUrl} exists.` })
+        if (alreadyExistingUrl) {
+            let url = await GET_ASYNC(`${longUrl}`)
+            shortUrl = JSON.parse(url)
+            urlCode = shortUrl.slice(shortUrl.lastIndexOf('/') + 1)
 
-        urlCode = shortid.generate().toLowerCase()
-        shortUrl = baseUrl + '/' + urlCode
+            res.status(200).send({
+                status: true, data: {
+                    longUrl: longUrl,
+                    shortUrl: shortUrl,
+                    urlCode: urlCode
+                }
+            })
+        } else {
+            urlCode = shortid.generate().toLowerCase()
+            shortUrl = baseUrl + '/' + urlCode
 
-        let creationData = { urlCode, longUrl, shortUrl }
-        let newSortUrl = await urlModel.create(creationData)
-        res.status(201).send({
-            status: true, data: {
-                longUrl: newSortUrl.longUrl,
-                shortUrl: newSortUrl.shortUrl,
-                urlCode: newSortUrl.urlCode
-            }
-        })
+            let creationData = { urlCode, longUrl, shortUrl }
+            let newSortUrl = await urlModel.create(creationData)
+            await SET_ASYNC(`${longUrl}`, JSON.stringify(newSortUrl.shortUrl))
+            res.status(201).send({
+                status: true, data: {
+                    longUrl: newSortUrl.longUrl,
+                    shortUrl: newSortUrl.shortUrl,
+                    urlCode: newSortUrl.urlCode
+                }
+            })
+        }
     }
     catch (error) {
         res.status(500).send({ status: false, msg: error.message })
