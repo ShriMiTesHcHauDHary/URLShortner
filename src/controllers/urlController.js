@@ -5,7 +5,7 @@ const shortid = require('shortid')
 
 
 const urlModel = require('../models/urlModel')
-const baseUrl = 'https://localhost:3000'
+const baseUrl = 'http://localhost:3000'
 
 const isValid = function (value) {
     if (typeof value === "undefined" || typeof value === null) return false
