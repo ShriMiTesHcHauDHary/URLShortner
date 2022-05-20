@@ -54,9 +54,9 @@ const postUrlShorten = async function (req, res) {
         if (!isValid(longUrl)) return res.status(400).send({ status: false, msg: 'Enter longUrl' })
         if (!validator.isURL(longUrl)) return res.status(400).send({ status: false, msg: `${longUrl} is not a valid url.` })
 
-        let alreadyExistingUrl = await urlModel.findOne({ longUrl: longUrl })
-        if (alreadyExistingUrl) {
-            let url = await GET_ASYNC(`${longUrl}`)
+        // let alreadyExistingUrl = await urlModel.findOne({ longUrl: longUrl })
+        let url = await GET_ASYNC(`${longUrl}`)
+        if (url) {
             shortUrl = JSON.parse(url)
             urlCode = shortUrl.slice(shortUrl.lastIndexOf('/') + 1)
 
