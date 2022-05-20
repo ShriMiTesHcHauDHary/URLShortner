@@ -2,13 +2,11 @@ const validator = require('validator')
 const redis = require('redis')
 const { promisify } = require("util");
 const shortid = require('shortid')
-
-
 const urlModel = require('../models/urlModel')
 const baseUrl = 'http://localhost:3000'
 
 const isValid = function (value) {
-    if (typeof value === "undefined" || typeof value === null) return false
+    if (typeof value === "undefined" || typeof value === null) return false;
     if (typeof value === "string" && value.trim().length == 0) return false
     return true
 }
@@ -73,7 +71,7 @@ const postUrlShorten = async function (req, res) {
 
             let creationData = { urlCode, longUrl, shortUrl }
             let newSortUrl = await urlModel.create(creationData)
-            await SET_ASYNC(`${longUrl}`, JSON.stringify(newSortUrl.shortUrl))
+            await SET_ASYNC(`${longUrl}`, JSON.stringify(newSortUrl.shortUrl))  //longurl:"xdhh"
             res.status(201).send({
                 status: true, data: {
                     longUrl: newSortUrl.longUrl,
